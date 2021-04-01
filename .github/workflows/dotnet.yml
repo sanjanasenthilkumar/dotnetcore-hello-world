@@ -35,6 +35,6 @@ jobs:
         
     - name: Push generated package to GitHub registry
        
-      run: nuget push "bin/Release/OctocatApp.1.0.0.nupkg" --source "GPR" -SkipDuplicate
+      run: nuget push "bin/Release/OctocatApp.1.0.0.nupkg" -source "GPR" -SkipDuplicate
     - name: Test
       run: dotnet test --no-build --verbosity normal
