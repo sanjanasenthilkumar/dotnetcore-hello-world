@@ -22,8 +22,7 @@ jobs:
 
     - name: Build
       run: dotnet build 
-    - name: Pack
-      run: dotnet pack --configuration Release
+    
     - name: Publish
       run: |  
           cd SOLUTION_FOLDER
