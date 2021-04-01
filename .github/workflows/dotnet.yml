@@ -16,12 +16,15 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+    - name: Restore
+      run: dotnet restore
+      
 
     - name: Build
       run: dotnet build 
     - name: Pack
       run: dotnet pack --configuration Release
     - name: Publish
-      run: dotnet nuget push "bin/Release/OctocatApp.1.0.0.nupkg" --source "github"
+      run: dotnet add package "bin/Release/OctocatApp.1.0.0.nupkg" --source "github"
     - name: Test
       run: dotnet test --no-build --verbosity normal
