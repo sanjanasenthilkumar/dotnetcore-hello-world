@@ -25,10 +25,13 @@ jobs:
         run: dotnet build -c Release
 
       - name: Generate a NuGet package
-        run: dotnet pack --no-build -c Release -o .
+        
+        run:  | 
+         mkdir project
+         dotnet pack --no-build -c Release -o out 
 
       - name: Push to GitHub package registry
-        run: dotnet nuget push *.nupkg
+        run: dotnet nuget push ./project/out/*.nupkg --skip-duplicate --no-symbols true
 
       - name: Test
         run: dotnet test --no-build --verbosity normal
