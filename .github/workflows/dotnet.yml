@@ -20,5 +20,9 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+    - name: Pack
+      run: dotnet pack --configuration Release
+    - name: Publish
+      run: dotnet nuget push "bin/Release/OctocatApp.1.0.0.nupkg" --source "github"
     - name: Test
       run: dotnet test --no-build --verbosity normal
