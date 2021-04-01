@@ -9,32 +9,26 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    name: Update NuGet package
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
-    - name: Restore
-      run: dotnet restore
-      
 
-    - name: Build
-      run: dotnet build 
-    
-    - name: Publish
-      run: |  
-       
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Setup .NET Core @ Latest
+        uses: actions/setup-dotnet@v1
+        with:
+          source-url: https://nuget.pkg.github.com/sanjanasenthilkumar/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}        
+          
+      - name: Build solution and generate NuGet package
+        run: |  
+          cd dotnetcore-hello-world
           dotnet pack -c Release -o out  
 
-    
-        
-    - name: Add private GitHub registry to NuGet
-      run: nuget sources add -name "GPR" -Source https://nuget.pkg.github.com/sanjanasenthilkumar/index.json -Username sanjanasenthilkumar -Password ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Push generated package to GitHub registry
-       
-      run: dotnet nuget push ./dotnetcore-hello-world/out/*.nupkg --source "GPR" --skip-duplicate
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      - name: Push generated package to GitHub registry
+        run: dotnet nuget push ./dotnetcore-hello-world/out/*.nupkg --skip-duplicate --no-symbols true
+
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
