@@ -7,28 +7,28 @@ on:
 
 jobs:
   build:
+   runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
-    name: Update NuGet package
-    steps:
-
+   steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@master
 
-      - name: Setup .NET Core @ Latest
+      - name: Setup .NET environment
         uses: actions/setup-dotnet@v1
         with:
+          dotnet-version: '3.1.102'
           source-url: https://nuget.pkg.github.com/sanjanasenthilkumar/index.json
         env:
-          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}        
-          
-      - name: Build solution and generate NuGet package
-        run: |  
-          cd dotnetcore-hello-world
-          dotnet pack -c Release -o out  
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-      - name: Push generated package to GitHub registry
-        run: dotnet nuget push ./dotnetcore-hello-world/out/*.nupkg --skip-duplicate --no-symbols true
+      - name: Build project
+        run: dotnet build -c Release
+
+      - name: Generate a NuGet package
+        run: dotnet pack --no-build -c Release -o .
+
+      - name: Push to GitHub package registry
+        run: dotnet nuget push *.nupkg
 
       - name: Test
         run: dotnet test --no-build --verbosity normal
