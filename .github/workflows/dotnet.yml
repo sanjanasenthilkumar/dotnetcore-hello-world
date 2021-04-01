@@ -35,6 +35,6 @@ jobs:
         
     - name: Push generated package to GitHub registry
        
-      run: dotnet nuget push ./dotnetcore-hello-world/out/*.nupkg --source "GPR" --SkipDuplicate
+      run: dotnet nuget push ./dotnetcore-hello-world/out/*.nupkg --source "GPR" --skip-duplicate
     - name: Test
       run: dotnet test --no-build --verbosity normal
